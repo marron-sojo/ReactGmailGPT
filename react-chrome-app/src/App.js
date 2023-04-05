@@ -40,10 +40,35 @@ function App() {
   const handleGenerateClick = async () => {
     // Send API request using the prompt text input data
     // For demonstration purposes, I'll just use a setTimeout to simulate an API call.
-    setTimeout(() => {
-      setResponse(`Generated response for prompt: "${prompt}" with tones: ${selectedTones.join(', ')}`);
-    }, 1000);
+    // setTimeout(() => {
+    //   setResponse(`Generated response for prompt: "${prompt}" with tones: ${selectedTones.join(', ')}`);
+    // }, 1000);
+
+    // event.preventDefault();
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailPrompt: {prompt} }),
+      });
+
+      const data = await response.json();
+      if (response.status !== 200) {
+        throw data.error || new Error(`Request failed with status ${response.status}`);
+      }
+
+      setResponse(data.result);
+      setPrompt("");
+    } catch(error) {
+      // Consider implementing your own error handling logic here
+      console.error(error);
+      alert(error.message);
+    }
+    
   };
+
 
   return (
     <div className="app-modal">
