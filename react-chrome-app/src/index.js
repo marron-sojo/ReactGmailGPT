@@ -57,7 +57,8 @@ document.addEventListener('click', function(e) {
       const root = ReactDOM.createRoot(appRoot);
       root.render(
         <React.StrictMode>
-          <App />
+          {/* <App /> */}
+          <App onClose={() => document.getElementById("app-root").remove()} />
         </React.StrictMode>
       );
       isModalShowing = true;

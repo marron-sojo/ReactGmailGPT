@@ -1,31 +1,17 @@
-// function App() {
-//   const appStyles = {
-//     position: "fixed",
-//     top: "10px",
-//     right: "10px",
-//     zIndex: 1000,
-//     backgroundColor: "white",
-//     padding: "10px",
-//     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-//     borderRadius: "4px",
-//   };
-
-//   return (
-//     <div style={appStyles}>
-//       <h1>React Chrome Extension</h1>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React, { useState } from 'react';
 import './App.css';
 
-function App() {
+function App({ onClose }) {
   const [selectedTones, setSelectedTones] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+
+  const handleCloseClick = () => {
+    setIsModalOpen(false);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const tones = ['Neutral', 'Formal', 'Smart', 'Concise', 'Professional', 'Firm'];
 
@@ -69,12 +55,17 @@ function App() {
     
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(true);
 
   return (
-    <div className="app-modal">
-      <h1>React Chrome Extension</h1>
+    isModalOpen && (<div className="app-modal">
+      <button className="close-button" onClick={handleCloseClick}>
+          &times;
+        </button>
+      <h1 className="title">React Chrome Extension</h1>
       <input
         type="text"
+        className="prompt-input"
         placeholder="Enter your prompt"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
@@ -83,20 +74,22 @@ function App() {
         {tones.map((tone) => (
           <button
             key={tone}
-            className={`app-button${selectedTones.includes(tone) ? ' selected' : ''}`}
+            className={`btn${selectedTones.includes(tone) ? ' selected' : ''}`}
             onClick={() => handleToneClick(tone)}
           >
             {tone}
           </button>
         ))}
       </div>
-      <button className="app-button" onClick={handleGenerateClick}>
-        Generate
-      </button>
+      <div className='generate-container'>
+        <button className="generate-btn" onClick={handleGenerateClick}>
+          Generate
+        </button>
+      </div>
       {response && (
-        <textarea className="textarea" value={response} readOnly />
+        <textarea className="response" value={response} readOnly />
       )}
-    </div>
+    </div>)
   );
 }
 
