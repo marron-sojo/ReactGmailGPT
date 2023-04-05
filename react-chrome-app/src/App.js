@@ -1,31 +1,12 @@
-// function App() {
-//   const appStyles = {
-//     position: "fixed",
-//     top: "10px",
-//     right: "10px",
-//     zIndex: 1000,
-//     backgroundColor: "white",
-//     padding: "10px",
-//     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-//     borderRadius: "4px",
-//   };
-
-//   return (
-//     <div style={appStyles}>
-//       <h1>React Chrome Extension</h1>
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import React, { useState } from 'react';
 import './App.css';
 
-function App() {
+export default function App() {
   const [selectedTones, setSelectedTones] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+
+  const axios = require('axios');
 
   const tones = ['Neutral', 'Formal', 'Smart', 'Concise', 'Professional', 'Firm'];
 
@@ -37,67 +18,86 @@ function App() {
     }
   };
 
-  const handleGenerateClick = async () => {
-    // Send API request using the prompt text input data
-    // For demonstration purposes, I'll just use a setTimeout to simulate an API call.
-    // setTimeout(() => {
-    //   setResponse(`Generated response for prompt: "${prompt}" with tones: ${selectedTones.join(', ')}`);
-    // }, 1000);
-
-    // event.preventDefault();
+  const handleGenerateClick = () => {
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emailPrompt: {prompt} }),
-      });
+      // const key = "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" // sohee key
+      const key = "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"
+      const endPoint = "https://api.openai.com/v1/completions"
+  
+      axios.post(endPoint, {
+          model: "text-davinci-003",
+          prompt: generateNewEmail(prompt, "", ""),
+          max_tokens: 100, // word count
+          n: 1,
+          stop: null,
+          temperature: 0.8   // 0(safe) - 1(creative)
+      }, {
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${key}`
+          }
+      }).then((res) => {
+        // todo: check status code
+        console.log(res.data);
+        setResponse(res.data.choices[0].text);
+        setPrompt("");
+        // setHistory([...history, 
+        //   `My input: ${prompt} \n GPT-3 output: ${res.data.choices[0].text}`
+        // ]);
+      }).catch((error) => {
+        // Handle error here
+        console.log("some error here");
+        console.log(error);
+      });;
 
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
-      }
-
-      setResponse(data.result);
-      setPrompt("");
     } catch(error) {
-      // Consider implementing your own error handling logic here
+      // todo: Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
-    
   };
 
-
-  return (
-    <div className="app-modal">
-      <h1>React Chrome Extension</h1>
-      <input
-        type="text"
-        placeholder="Enter your prompt"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
-      <div>
-        {tones.map((tone) => (
-          <button
-            key={tone}
-            className={`app-button${selectedTones.includes(tone) ? ' selected' : ''}`}
-            onClick={() => handleToneClick(tone)}
-          >
-            {tone}
-          </button>
-        ))}
+    return (
+        <div className="app-modal">
+        <h1>React Chrome Extension</h1>
+        <input
+          type="text"
+          placeholder="Enter your prompt"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
+        <div>
+          {tones.map((tone) => (
+            <button
+              key={tone}
+              className={`app-button${selectedTones.includes(tone) ? ' selected' : ''}`}
+              onClick={() => handleToneClick(tone)}
+            >
+              {tone}
+            </button>
+          ))}
+        </div>
+        <button className="app-button" onClick={handleGenerateClick}>
+          Generate
+        </button>
+        {response && (
+          <textarea className="textarea" value={response} readOnly />
+        )}
       </div>
-      <button className="app-button" onClick={handleGenerateClick}>
-        Generate
-      </button>
-      {response && (
-        <textarea className="textarea" value={response} readOnly />
-      )}
-    </div>
-  );
-}
+    )
+  }
 
-export default App;
+  function generateNewEmail(emailPrompt, tones, context) {
+    return `
+      Given the context: ${context}.
+      You are an assistant helping to draft a ${tones} email. 
+      Use the email in the double square bracket as the summary of the email that you need to rewrite. 
+      Please note that you are rewriting the email and not replying. 
+      Do not include the brackets in the output, only respond with the email. 
+      Also, reply in language of the text in bracket. 
+      Always have a greeting and closing too:
+      [${emailPrompt}]`;
+  }
+
+
+// export default App;
