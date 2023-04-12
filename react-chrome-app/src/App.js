@@ -18,10 +18,20 @@ export default function App() {
     }
   };
 
+  // curl https://api.openai.com/v1/completions \
+  // -H "Content-Type: application/json" \
+  // -H "Authorization: Bearer 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" \
+  // -d '{
+  //   "model": "text-davinci-003",
+  //   "prompt": "write an email",
+  //   "max_tokens": 7,
+  //   "temperature": 0
+  // }'
+  
   const handleGenerateClick = () => {
     try {
-      // const key = "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" // sohee key
-      const key = "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"
+      // const key = "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" // sohee key
+      const key = "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"
       const endPoint = "https://api.openai.com/v1/completions"
   
       axios.post(endPoint, {
@@ -34,7 +44,7 @@ export default function App() {
       }, {
           headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${key}`
+              'Authorization': `Bearer ${key}`,
           }
       }).then((res) => {
         // todo: check status code
@@ -44,11 +54,7 @@ export default function App() {
         // setHistory([...history, 
         //   `My input: ${prompt} \n GPT-3 output: ${res.data.choices[0].text}`
         // ]);
-      }).catch((error) => {
-        // Handle error here
-        console.log("some error here");
-        console.log(error);
-      });;
+      });
 
     } catch(error) {
       // todo: Consider implementing your own error handling logic here
@@ -98,6 +104,5 @@ export default function App() {
       Always have a greeting and closing too:
       [${emailPrompt}]`;
   }
-
 
 // export default App;
