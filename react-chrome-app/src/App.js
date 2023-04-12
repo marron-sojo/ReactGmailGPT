@@ -100,14 +100,14 @@ export default function App({ onClose }) {
             >{tone}</button>
           ))}
         </div>
-        <div className='generate-container'>
-          <button className="generate-btn" onClick={handleGenerateClick}>
-            Generate
-          </button>
-        </div>
         {response && (
           <textarea className="response" value={response} readOnly />
         )}
+        <div className='generate-container'>
+          <button className="generate-btn"g onClick={handleGenerateClick}>
+            Generate
+          </button>
+        </div>
       </div>
     )
   );
