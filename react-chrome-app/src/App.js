@@ -3,7 +3,7 @@ import './App.css';
 
 export default function App({ onClose }) {
   const [selectedTones, setSelectedTones] = useState([]);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState('Write an email that...');
   const [response, setResponse] = useState('');
 
   const axios = require('axios');
@@ -59,6 +59,17 @@ export default function App({ onClose }) {
     }
   };
 
+  const handleInsertClick = () => {
+    // Insert the response text into the email body
+    const emailBody = document.querySelector('div[aria-label="Message Body"]');
+  if (emailBody) {
+    emailBody.innerHTML = response + emailBody.innerHTML;
+  }
+  
+    // Close the modal
+    handleCloseClick();
+  };
+
   function generateNewEmail(emailPrompt, tones, context) {
     return `
       Given the context: ${context}.
@@ -100,14 +111,24 @@ export default function App({ onClose }) {
             >{tone}</button>
           ))}
         </div>
-        <div className='generate-container'>
-          <button className="generate-btn" onClick={handleGenerateClick}>
-            Generate
-          </button>
-        </div>
         {response && (
           <textarea className="response" value={response} readOnly />
         )}
+
+        <div className='bottom-container'>
+          {response && (
+            <div className="insert-container">
+              <button className="insert-btn" onClick={handleInsertClick}>
+                Insert
+              </button>
+            </div>
+          )}
+          <div className='generate-container'>
+            <button className="generate-btn"g onClick={handleGenerateClick}>
+              Generate
+            </button>
+          </div>
+        </div>
       </div>
     )
   );
