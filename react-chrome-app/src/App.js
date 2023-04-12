@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
 
-function App({ onClose }) {
+export default function App() {
   const [selectedTones, setSelectedTones] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
 
+  const axios = require('axios');
   const handleCloseClick = () => {
     setIsModalOpen(false);
     if (onClose) {
@@ -23,36 +24,49 @@ function App({ onClose }) {
     }
   };
 
-  const handleGenerateClick = async () => {
-    // Send API request using the prompt text input data
-    // For demonstration purposes, I'll just use a setTimeout to simulate an API call.
-    // setTimeout(() => {
-    //   setResponse(`Generated response for prompt: "${prompt}" with tones: ${selectedTones.join(', ')}`);
-    // }, 1000);
-
-    // event.preventDefault();
+  // curl https://api.openai.com/v1/completions \
+  // -H "Content-Type: application/json" \
+  // -H "Authorization: Bearer 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" \
+  // -d '{
+  //   "model": "text-davinci-003",
+  //   "prompt": "write an email",
+  //   "max_tokens": 7,
+  //   "temperature": 0
+  // }'
+  
+  const handleGenerateClick = () => {
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emailPrompt: {prompt} }),
+      // const key = "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" // sohee key
+      const key = "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"
+      const endPoint = "https://api.openai.com/v1/completions"
+  
+      axios.post(endPoint, {
+          model: "text-davinci-003",
+          prompt: generateNewEmail(prompt, "", ""),
+          max_tokens: 100, // word count
+          n: 1,
+          stop: null,
+          temperature: 0.8   // 0(safe) - 1(creative)
+      }, {
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${key}`,
+          }
+      }).then((res) => {
+        // todo: check status code
+        console.log(res.data);
+        setResponse(res.data.choices[0].text);
+        setPrompt("");
+        // setHistory([...history, 
+        //   `My input: ${prompt} \n GPT-3 output: ${res.data.choices[0].text}`
+        // ]);
       });
 
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
-      }
-
-      setResponse(data.result);
-      setPrompt("");
     } catch(error) {
-      // Consider implementing your own error handling logic here
+      // todo: Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
-    
   };
 
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -93,4 +107,16 @@ function App({ onClose }) {
   );
 }
 
-export default App;
+  function generateNewEmail(emailPrompt, tones, context) {
+    return `
+      Given the context: ${context}.
+      You are an assistant helping to draft a ${tones} email. 
+      Use the email in the double square bracket as the summary of the email that you need to rewrite. 
+      Please note that you are rewriting the email and not replying. 
+      Do not include the brackets in the output, only respond with the email. 
+      Also, reply in language of the text in bracket. 
+      Always have a greeting and closing too:
+      [${emailPrompt}]`;
+  }
+
+// export default App;
