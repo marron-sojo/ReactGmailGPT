@@ -7,6 +7,12 @@ export default function App() {
   const [response, setResponse] = useState('');
 
   const axios = require('axios');
+  const handleCloseClick = () => {
+    setIsModalOpen(false);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   const tones = ['Neutral', 'Formal', 'Smart', 'Concise', 'Professional', 'Firm'];
 
@@ -63,35 +69,43 @@ export default function App() {
     }
   };
 
-    return (
-        <div className="app-modal">
-        <h1>React Chrome Extension</h1>
-        <input
-          type="text"
-          placeholder="Enter your prompt"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-        />
-        <div>
-          {tones.map((tone) => (
-            <button
-              key={tone}
-              className={`app-button${selectedTones.includes(tone) ? ' selected' : ''}`}
-              onClick={() => handleToneClick(tone)}
-            >
-              {tone}
-            </button>
-          ))}
-        </div>
-        <button className="app-button" onClick={handleGenerateClick}>
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  return (
+    isModalOpen && (<div className="app-modal">
+      <button className="close-button" onClick={handleCloseClick}>
+          &times;
+        </button>
+      <h1 className="title">React Chrome Extension</h1>
+      <input
+        type="text"
+        className="prompt-input"
+        placeholder="Enter your prompt"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+      />
+      <div>
+        {tones.map((tone) => (
+          <button
+            key={tone}
+            className={`btn${selectedTones.includes(tone) ? ' selected' : ''}`}
+            onClick={() => handleToneClick(tone)}
+          >
+            {tone}
+          </button>
+        ))}
+      </div>
+      <div className='generate-container'>
+        <button className="generate-btn" onClick={handleGenerateClick}>
           Generate
         </button>
-        {response && (
-          <textarea className="textarea" value={response} readOnly />
-        )}
       </div>
-    )
-  }
+      {response && (
+        <textarea className="response" value={response} readOnly />
+      )}
+    </div>)
+  );
+}
 
   function generateNewEmail(emailPrompt, tones, context) {
     return `
