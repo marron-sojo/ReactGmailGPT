@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 
-export default function App() {
+export default function App({ onClose }) {
   const [selectedTones, setSelectedTones] = useState([]);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
@@ -24,16 +24,7 @@ export default function App() {
     }
   };
 
-  // curl https://api.openai.com/v1/completions \
-  // -H "Content-Type: application/json" \
-  // -H "Authorization: Bearer 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" \
-  // -d '{
-  //   "model": "text-davinci-003",
-  //   "prompt": "write an email",
-  //   "max_tokens": 7,
-  //   "temperature": 0
-  // }'
-  
+
   const handleGenerateClick = () => {
     try {
       // const key = "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" // sohee key
@@ -63,49 +54,10 @@ export default function App() {
       });
 
     } catch(error) {
-      // todo: Consider implementing your own error handling logic here
       console.error(error);
       alert(error.message);
     }
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(true);
-
-  return (
-    isModalOpen && (<div className="app-modal">
-      <button className="close-button" onClick={handleCloseClick}>
-          &times;
-        </button>
-      <h1 className="title">React Chrome Extension</h1>
-      <input
-        type="text"
-        className="prompt-input"
-        placeholder="Enter your prompt"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-      />
-      <div>
-        {tones.map((tone) => (
-          <button
-            key={tone}
-            className={`btn${selectedTones.includes(tone) ? ' selected' : ''}`}
-            onClick={() => handleToneClick(tone)}
-          >
-            {tone}
-          </button>
-        ))}
-      </div>
-      <div className='generate-container'>
-        <button className="generate-btn" onClick={handleGenerateClick}>
-          Generate
-        </button>
-      </div>
-      {response && (
-        <textarea className="response" value={response} readOnly />
-      )}
-    </div>)
-  );
-}
 
   function generateNewEmail(emailPrompt, tones, context) {
     return `
@@ -119,4 +71,44 @@ export default function App() {
       [${emailPrompt}]`;
   }
 
-// export default App;
+  const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const getButtonClassName = (tone) => {
+    // return selectedTones.includes(tone) ? 'btn selected' : 'btn';
+    return selectedTones.includes(tone) ? 'btn-selected' : 'btn-not-selected';
+  };
+
+  return (
+    isModalOpen && (
+      <div className="app-modal">
+        <button className="close-button" onClick={handleCloseClick}>
+          &times;
+        </button>
+        <h1 className="title">Gmail GPT</h1>
+        <input
+          type="text"
+          className="prompt-input"
+          placeholder="Enter your prompt"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+        />
+        <div>
+          {tones.map((tone) => (
+            <button
+              className={getButtonClassName(tone)}
+              onClick={() => handleToneClick(tone)}
+            >{tone}</button>
+          ))}
+        </div>
+        <div className='generate-container'>
+          <button className="generate-btn" onClick={handleGenerateClick}>
+            Generate
+          </button>
+        </div>
+        {response && (
+          <textarea className="response" value={response} readOnly />
+        )}
+      </div>
+    )
+  );
+}
