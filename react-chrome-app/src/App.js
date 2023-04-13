@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 
-export default function App({ onClose }) {
+export default function App({ onClose, onModalClose }) {
   const [selectedTones, setSelectedTones] = useState([]);
   const [prompt, setPrompt] = useState('Write an email that...');
   const [response, setResponse] = useState('');
@@ -11,6 +11,9 @@ export default function App({ onClose }) {
     setIsModalOpen(false);
     if (onClose) {
       onClose();
+    }
+    if (onModalClose) {
+      onModalClose();
     }
   };
 

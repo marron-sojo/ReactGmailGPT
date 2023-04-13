@@ -16,7 +16,7 @@ const observer = new MutationObserver(function (mutationsList, observer) {
         const sendButton = newWindow.querySelector('div[data-tooltip*="Send"]');
         // Create a new icon element
         const icon = document.createElement("div");
-        icon.innerHTML = "🏆";
+        icon.innerHTML = "🤖";
         icon.title = "Click here to launch your email!";
         icon.className = "icon-btn"; // Add a class name to the icon element
 
@@ -39,7 +39,7 @@ const observer = new MutationObserver(function (mutationsList, observer) {
 let isModalShowing = false;
 
 document.addEventListener('click', function(e) {
-  if (e.target.innerHTML === "🏆" && !isModalShowing) {
+  if (e.target.innerHTML === "🤖" && !isModalShowing) {
     const appRoot = document.createElement("div");
     appRoot.id = "app-root";
     document.body.appendChild(appRoot);
@@ -47,7 +47,7 @@ document.addEventListener('click', function(e) {
     const root = ReactDOM.createRoot(appRoot);
     root.render(
       <React.StrictMode>
-        <App onClose={() => document.getElementById("app-root").remove()} />
+        <App onClose={() => document.getElementById("app-root").remove()} onModalClose={() => (isModalShowing = false)}/>
       </React.StrictMode>
     );
     isModalShowing = true;
