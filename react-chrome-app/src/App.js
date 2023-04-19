@@ -66,7 +66,9 @@ export default function App({ onClose, onModalClose }) {
     // Insert the response text into the email body
     const emailBody = document.querySelector('div[aria-label="Message Body"]');
   if (emailBody) {
-    emailBody.innerHTML = response + emailBody.innerHTML;
+    // emailBody.innerHTML = response + emailBody.innerHTML;
+    const cleanedResponse = response.replace(/^\n/, '').replace(/\n/g, '<br>');
+    emailBody.insertAdjacentHTML('afterbegin', cleanedResponse);
   }
   
     // Close the modal
