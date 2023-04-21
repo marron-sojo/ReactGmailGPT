@@ -6,7 +6,7 @@
 .setting-container {
   width: 100%;
   height: 100%;
-  background-color: #F6F6FC;
+  background-color: #f6f6fc;
   display: flex;
   align-items: center;
 }
@@ -19,19 +19,18 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  background-color: #F6F6FC;
+  background-color: #f6f6fc;
   padding: 20px 40px 0px 40px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   width: 50%;
-  color: #030E6E;
-  font-family: 'Nunito Sans', sans-serif;
-  text-align: center
+  color: #030e6e;
+  font-family: "Nunito Sans", sans-serif;
+  text-align: center;
 }
 
-
 .app-modal {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -44,7 +43,11 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   width: 50%;
-  background-image: linear-gradient(to bottom, white calc(100% - 70px), #F6F6FC 70px); 
+  background-image: linear-gradient(
+    to bottom,
+    white calc(100% - 70px),
+    #f6f6fc 70px
+  );
 }
 
 .close-button {
@@ -58,9 +61,8 @@
 }
 
 .close-button:hover {
-  color: #D3D3E7;
+  color: #d3d3e7;
 }
-
 
 .title {
   font-size: 24px;
@@ -68,16 +70,18 @@
 }
 
 .prompt-input {
-  border-radius: 5px;
   font-size: 14px;
   padding: 8px;
-  line-height: 1.5;
-  color: #3D3D3D;
-  border: 1px solid #EBEBEB;
+  color: #3d3d3d;
+  border: 1px solid #ccc;
   border-radius: 5px;
   resize: vertical;
-  background-color: #FCFCFC;
+  background-color: #fcfcfc;
   outline: none;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .api-key-input {
@@ -86,11 +90,11 @@
   font-size: 14px;
   padding: 8px;
   line-height: 1.5;
-  color: #3D3D3D;
-  border: 1px solid #EBEBEB;
+  color: #3d3d3d;
+  border: 1px solid #ebebeb;
   border-radius: 5px;
   resize: vertical;
-  background-color: #FCFCFC;
+  background-color: #fcfcfc;
   outline: none;
 }
 
@@ -101,8 +105,8 @@
 }
 
 .btn-not-selected {
-  background-color: #FCFCFC;
-  border-color: #EBEBEB;
+  background-color: #fcfcfc;
+  border-color: #ebebeb;
   border-width: 1px;
   border-style: solid;
   border-radius: 5px;
@@ -116,13 +120,13 @@
 }
 
 .btn-not-selected:hover {
-  background-color: #F6F6FC;
+  background-color: #f6f6fc;
   border-radius: 5px;
 }
 
 .btn-selected {
-  background-color: #D3D3E7;
-  border-color: #EBEBEB;
+  background-color: #d3d3e7;
+  border-color: #ebebeb;
   border-width: 1px;
   border-style: solid;
   border-radius: 5px;
@@ -198,7 +202,7 @@
 }
 
 .generate-btn:hover {
-  background-color: #2F2F2F;
+  background-color: #2f2f2f;
 }
 
 .insert-container {
@@ -209,7 +213,7 @@
 }
 
 .white-btns {
-  border-color: #EBEBEB;
+  border-color: #ebebeb;
   border-width: 1px;
   border-style: solid;
   border-radius: 5px;
@@ -218,35 +222,36 @@
   padding: 8px 20px;
   font-size: 14px;
   transition: all 0.3s ease;
-  background-color: #FCFCFC;
-  color: #3D3D3D;
+  background-color: #fcfcfc;
+  color: #3d3d3d;
   margin-right: 12px;
 }
 
 .white-btns:hover {
-  background-color: #F6F6F6;
+  background-color: #f6f6f6;
 }
 
 .response {
+  width: 100%;
   height: 150px;
   padding: 8px;
   font-size: 14px;
   line-height: 1.5;
-  color: #3D3D3D;
-  border: 1px solid #EBEBEB;
+  color: #3d3d3d;
+  border: 1px solid #ebebeb;
   border-radius: 5px;
   resize: vertical;
-  background-color: #FCFCFC;
+  background-color: #fcfcfc;
   outline: none;
   transition: border-color 0.2s ease-in-out;
 }
 
 .response:focus {
-  border-color: #F6F6FC;
+  border-color: #f6f6fc;
 }
 
 hr {
-  border-color: #DBD9D9;
+  border-color: #dbd9d9;
 }
 
 .title-1 {
@@ -256,6 +261,13 @@ hr {
 .thin-2 {
   font-size: 12px;
   font-weight: 300;
+}
+
+.horizontal-line {
+  height: 1px;
+  background-color: #dbd9d9;
+  width: 100%;
+  margin: 24px 0px;
 }
 
 /* todo: when generate, loading indicator */
