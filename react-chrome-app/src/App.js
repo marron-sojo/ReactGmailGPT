@@ -59,6 +59,7 @@ export default function App({ onClose, onModalClose }) {
       setIsSettingOpen(false);
     } else {
       alert("The API key is invalid. Try again.");
+      setApiKey("");
     }
   };
 
