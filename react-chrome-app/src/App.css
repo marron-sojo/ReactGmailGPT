@@ -166,6 +166,9 @@
 }
 
 .generate-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-color: black;
   border-width: 1px;
   border-style: solid;
@@ -179,6 +182,23 @@
   color: white;
 }
 
+.generate-btn-disabled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: lightgray;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 200px;
+  padding: 8px 20px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: lightgray;
+  color: white;
+}
+
 .save-btn-container {
   margin: 15px 0px 20px 0px;
   display: flex;
@@ -188,6 +208,9 @@
 }
 
 .save-btn {
+  display: "flex";
+  justify-content: "center";
+  align-items: "center";
   border-color: black;
   border-width: 1px;
   border-style: solid;
