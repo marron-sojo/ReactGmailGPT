@@ -195,11 +195,8 @@ export default function App({ onClose, onModalClose }) {
           <button className="close-button" onClick={handleCloseClick}>
             &times;
           </button>
-          <h1 className="title">Gmail GPT</h1>
-          <p className="text">
-            Briefly enter what do you want to generate or choose from the
-            template
-          </p>
+          <h1 className="title">GPTmail</h1>
+          <p className="text">Briefly explain what your email is about</p>
           <input
             className="prompt-input"
             type="text"
@@ -207,7 +204,7 @@ export default function App({ onClose, onModalClose }) {
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
           />
-          <p className="text">Tone</p>
+          <p className="text">Select the tones</p>
           <div className="tones">
             {tones.map((tone, index) => (
               <button
