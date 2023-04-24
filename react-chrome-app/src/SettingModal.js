@@ -1,13 +1,21 @@
 import React from "react";
 import "./SettingModal.css";
+import "./Spinner.css";
 
-const SettingModal = ({ apiKey, setApiKey, handleSaveClick, onClose }) => (
+const SettingModal = ({
+  apiKey,
+  setApiKey,
+  handleSaveClick,
+  onClose,
+  isLoadingApiKey,
+  setIsLoadingApiKey,
+}) => (
   <div className="app-setting-modal">
     <button className="close-settings-button" onClick={onClose}>
       &times;
     </button>
     <p>
-      <span class="title-1">Welcome to GmailGPT</span>
+      <span class="title-1">Welcome to GPTmail</span>
       <br></br>
       <span class="thin-2">
         a chrome extension to help you write email <i>easier</i> but{" "}
@@ -29,15 +37,34 @@ const SettingModal = ({ apiKey, setApiKey, handleSaveClick, onClose }) => (
       your device.{" "}
     </p>
     <input
-      type="text"
+      type="password"
       className="api-key-input"
       placeholder="Paste your API Secret key here ..."
       value={apiKey}
       onChange={(e) => setApiKey(e.target.value)}
     />
     <div className="save-btn-container">
-      <button className="save-btn" onClick={handleSaveClick}>
-        Save
+      <button
+        className="save-btn"
+        onClick={() => {
+          setIsLoadingApiKey(true);
+          handleSaveClick()
+            .then(() => {
+              setIsLoadingApiKey(false);
+            })
+            .catch(() => {
+              setIsLoadingApiKey(false);
+            });
+        }}
+      >
+        {isLoadingApiKey ? (
+          <>
+            <span className="spinner" />
+            <span style={{ marginLeft: "8px" }}>Validating</span>
+          </>
+        ) : (
+          "Save"
+        )}
       </button>
     </div>
   </div>
