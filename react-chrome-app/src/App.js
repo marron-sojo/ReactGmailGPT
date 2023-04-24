@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import SettingModal from "./SettingModal";
+import "./Spinner.css";
 
 export default function App({ onClose, onModalClose }) {
   const [selectedTones, setSelectedTones] = useState([]);
@@ -9,9 +10,22 @@ export default function App({ onClose, onModalClose }) {
   const [apiKey, setApiKey] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isSettingOpen, setIsSettingOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingApiKey, setIsLoadingApiKey] = useState(false);
 
   const axios = require("axios");
   const endPoint = "https://api.openai.com/v1/completions";
+
+  useEffect(() => {
+    getApiKey();
+  }, []);
+
+  const getApiKey = () => {
+    chrome.storage.local.get(["apiKey"]).then((result) => {
+      console.log("Value currently is " + result.apiKey);
+      setApiKey(result.apiKey);
+    });
+  };
 
   const tones = [
     "Concise",
@@ -49,25 +63,39 @@ export default function App({ onClose, onModalClose }) {
   const handleSaveClick = async () => {
     const isValid = await checkApiKeyValidity(apiKey);
     if (isValid) {
-      // Save the API key
-      localStorage.setItem("apiKey", apiKey);
-
-      // Show a toast message
-      // toast.success("API key successfully saved", { autoClose: 3000 });
+      // Save the API key to chrome storage
+      chrome.storage.local.set({ apiKey: apiKey }).then(() => {
+        console.log("API Key is set!");
+      });
 
       // Close the settings modal
       setIsSettingOpen(false);
+      setIsLoadingApiKey(false);
+      return Promise.resolve();
     } else {
       alert("The API key is invalid. Try again.");
+      chrome.storage.local.set({ apiKey: "" }).then(() => {
+        console.log("API Key is empty!");
+      });
       setApiKey("");
+      setIsLoadingApiKey(false);
+      return Promise.reject();
     }
   };
 
-  const handleGenerateClick = () => {
-    try {
-      // const key = "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" // sohee key
-      const key = "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";
+  const handleApiKeyAlert = () => {
+    alert("Please register your API key");
+    setIsSettingOpen(true);
+  };
 
+  const handleGenerateClick = () => {
+    setIsLoading(true);
+    if (apiKey === "") {
+      handleApiKeyAlert();
+      setIsLoading(false);
+      return;
+    }
+    try {
       axios
         .post(
           endPoint,
@@ -82,7 +110,7 @@ export default function App({ onClose, onModalClose }) {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${key}`,
+              Authorization: `Bearer ${apiKey}`,
             },
           }
         )
@@ -91,10 +119,12 @@ export default function App({ onClose, onModalClose }) {
           console.log(res.data);
           setResponse(res.data.choices[0].text);
           setPrompt("");
+          setIsLoading(false);
         });
     } catch (error) {
       console.error(error);
       alert(error.message);
+      setIsLoading(false);
     }
   };
 
@@ -222,8 +252,22 @@ export default function App({ onClose, onModalClose }) {
               )}
               <div className="generate-container">
                 {/* button should be regenerate once user generated  */}
-                <button className="generate-btn" onClick={handleGenerateClick}>
-                  Generate
+                <button
+                  className={
+                    apiKey.length > 0 ? "generate-btn" : "generate-btn-disabled"
+                  }
+                  onClick={
+                    apiKey.length > 0 ? handleGenerateClick : handleApiKeyAlert
+                  }
+                >
+                  {isLoading ? (
+                    <>
+                      <span className="spinner" />
+                      <span style={{ marginLeft: "8px" }}>Generating</span>
+                    </>
+                  ) : (
+                    "Generate"
+                  )}
                 </button>
               </div>
             </div>
@@ -234,6 +278,8 @@ export default function App({ onClose, onModalClose }) {
         <SettingModal
           apiKey={apiKey}
           setApiKey={setApiKey}
+          isLoadingApiKey={isLoadingApiKey}
+          setIsLoadingApiKey={setIsLoadingApiKey}
           handleSaveClick={() => {
             handleSaveClick();
           }}
