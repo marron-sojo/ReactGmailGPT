@@ -55,6 +55,7 @@ const observer = new MutationObserver(function (mutationsList, observer) {
         iconWrapper.style.alignItems = "center";
         iconWrapper.style.justifyContent = "center";
         iconWrapper.style.height = "40px"; // Set the desired height for the wrapper
+        iconWrapper.style.marginLeft = "8px"; // Set the margin left
 
         iconWrapper.appendChild(iconImg);
         icon.appendChild(iconWrapper);
